@@ -128,6 +128,21 @@ class MontyHall:
             im = self._combine_digits(s[2*i:2*i+2])
             hardware.show_image(i, im)
 
+    def print_binary_number(self,num):
+        s = bin(num)[2:]
+        while len(s)<24:
+            s = '0'+s
+        pos = 0        
+        for i in range(3):
+            im = hardware.last_drawn_data[i]
+            g = s[i*8:i*8+8]
+            for j in range(7,-1,-1):
+                if g[j]=='1':
+                    im = hardware.or_image(im, ART.bin_digits_art[j])
+            hardware.show_image(i, im)
+            pos+=1
+            
+
     def get_stats_num(self):
         n = 0
         if self.num_games:
@@ -168,7 +183,8 @@ class MontyHall:
 
         if hardware.get_stats():
             hold = dict(hardware.last_drawn_data)
-            self.print_number(self.get_stats_num())
+            self.print_number(self.get_stats_num())    
+            self.print_binary_number(self.num_games)     
             while hardware.get_stats():
                 time.sleep(0.1)
             for num,image in hold.items():
